@@ -1,0 +1,34 @@
+type Query {
+  getHackerNewsPosts: [HackerNewsPost] @function(name: "hackerNews-${env}")
+  getTrendingGithubRepos: [GithubRepo] @function(name: "trendingGitHubRepos-${env}")
+  getTodoList: [Todos]
+  # allHeadlines: [AllHeadlines]
+}
+
+type HackerNewsPost {
+  id: ID!
+  title: String!
+  url: String!
+  by: String!
+}
+
+type GithubRepo{
+  author: String!
+  name: String!
+  url: String
+  stars: Int
+  language: String
+  forks: Int
+  currentPeriodStars: Int
+}
+
+type Todos @model {
+  title: String!
+  post: String!
+}
+
+# type AllHeadlines {
+#   hackerNews: [HackerNewsPost] @function(name: "hackerNews-${env}"
+#   githubRepo: [GithubRepo] @function(name: "trendingGitHubRepos-${env}")
+#   myTodos: [MyTodos]
+# }
