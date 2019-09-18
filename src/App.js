@@ -1,9 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useReducer} from 'react';
 import { API, graphqlOperation} from 'aws-amplify';
 import logo from './logo.svg';
 import './App.css';
 
-import { getHackerNewsPosts, getTrendingGithubRepos } from './graphql/queries'
+import { getHackerNewsPosts, getTrendingGithubRepos, listTodoss } from './graphql/queries'
+import { createTodos } from './graphql/mutations'
+import { onCreateTodos } from './graphql/subscriptions'
 
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
@@ -14,6 +16,18 @@ function Home() {
       <h2>Home</h2>
     </div>
   );
+}
+
+const initialState = {todos:[]};
+const reducer = (state, action) =>{
+  switch(action.type){
+    case 'QUERY':
+      return {...state, todos:action.todos}
+    case 'SUBSCRIPTION':
+      return {...state, todos:[...state.todos, action.todo]}
+    default:
+      return state
+  }
 }
 
 function HackerNews({ match }) {
@@ -66,21 +80,44 @@ function GithubRepos({ match }) {
 
 function MyTodoList({ match }) {
   console.log("Trying to get my todo list")
-  const todoList = function getTodos() {
-    // API.graphql(graphqlOperation(getTrendingGithubRepos))
-    //   .then(result => {
-    //     console.log("Results Below")
-    //     console.log(result);
-    //     return result
+  // Create a new Note according to the columns we defined earlier
+  const [state, dispatch] = useReducer(reducer, initialState)
+  useEffect(() => {
+    getData()
+    const subscription = API.graphql(graphqlOperation(onCreateTodos)).subscribe({
+      next: (eventData) => {
+        const todo = eventData.value.data.onCreateTodo;
+        dispatch({type:'SUBSCRIPTION', todo})
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [])
 
-    //   })
-    //   .catch(error => {
-    //     console.log("ERROR: " + JSON.stringify(error, null, 4));
-    //   })
+  async function createNewTodo() {
+    const todo = { title: "Use AppSync" , post: "Realtime and Offline"}
+    try {
+      var resp = await API.graphql(graphqlOperation(createTodos, { input: todo }))
+      console.log(resp)
+
+    } catch(err) {console.log(err)}
+     
   }
+
+  async function getData() {
+    try {
+      var todoData = await API.graphql(graphqlOperation(listTodoss))
+      console.log(todoData)
+    } catch(err) {console.log(err)}
+    dispatch({type:'QUERY', todos: todoData.data.listTodoss.items});
+  }
+
   return (
     <div>
+      <div className="App">
+        <button onClick={createNewTodo}>Add Todo</button>
+      </div>
       <p>My Todo List</p>
+      <div>{ state.todos.map((todo, i) => <p key={todo.id}>{todo.title} : {todo.post}</p>) }</div>
       <form>
         <label>
           Name:
