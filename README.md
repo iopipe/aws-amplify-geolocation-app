@@ -1,4 +1,4 @@
-##Description
+## Description
 A serverless headlines and todo demo app deployed 100% with AWS amplify with React as a front-end. Optionally add IOpipe for detailed monitoring of your Lambda functions. 
 ![](architecture_map.jpeg)
 
@@ -30,9 +30,7 @@ There is also the `/todos` page which will show a form to submit a new todo item
    ```
    amplify push
    Do you want to update code for your updated GraphQL API Yes
-   Do you want to generate GraphQL statements (queries, mutations and subscription) based on your schema types? This will overwrite your
- current graphql queries, mutations and subscriptions Yes
-
+   Do you want to generate GraphQL statements (queries, mutations and subscription) based on your schema types? This will overwrite your current graphql queries, mutations and subscriptions Yes
    ```
    
 6) Increase the memory size of the Lambda functions in your aws console to at least 512MB. You could also update this in the cloudformation template for each respective function `amplify/functions/hackerNews/hackerNews-cloudformation-template.json`
