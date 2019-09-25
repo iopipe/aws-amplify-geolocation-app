@@ -31,33 +31,30 @@ const reducer = (state, action) =>{
 }
 
 function HackerNews({ match }) {
-  const [posts, updatePosts] = useState([]);
+  var [posts, updatePosts] = useState([]);
   console.log("Trying to get HN posts")
 
   function handlePosts(data) {
     updatePosts(data);
   }
 
-  const posts = function getPosts() {
-    API.graphql(graphqlOperation(getHackerNewsPosts))
-      .then(result => {
-        console.log("Results Below")
-        console.log(result);
-        handlePosts(result);
-      })
-      .catch(error => {
-        console.log("ERROR: " + JSON.stringify(error, null, 4));
-      })
-  }
+  API.graphql(graphqlOperation(getHackerNewsPosts))
+    .then(result => {
+      console.log("Results Below")
+      console.log(result.data.getHackerNewsPosts);
+      // handlePosts(result.data.getHackerNewsPosts);
+      updatePosts(result.data.getHackerNewsPosts);
+    })
+    .catch(error => {
+      console.log("ERROR: " + JSON.stringify(error, null, 4));
+    })
   return (
     <div>
-      <h1>HEY IT"S HACKER NEWS</h1>
-      <p>My content: {posts() ? posts() : "Nothing yet"}</p>
-      <h3>{match.params.topicId}</h3>
+      <h1>HACKER NEWS</h1>
       {posts.map(post => {
         const { title, url } = post;
         return (
-          <div>
+          <div key={title}>
             <h2>{title}</h2>
             <a href={url}>view live</a>
           </div>
@@ -155,7 +152,7 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <Router>
           <div>
-            <ul>
+            <ul id="menu">
               <li>
                 <Link to="/">Home</Link>
               </li>
@@ -170,8 +167,6 @@ function App() {
               </li>
 
             </ul>
-
-            <hr />
 
             <Route exact path="/" component={Home} />
             <Route path="/hackerNews" component={HackerNews} />
