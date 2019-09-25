@@ -33,39 +33,23 @@ const reducer = (state, action) =>{
 class HackerNews extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      posts: [],
-      testState: null
-    }
+    this.posts = [];
   }
 
   componentDidMount() {
     this.getPosts();
   }
-  
-  changeState() {
-    this.setState({testState: 'testing'});
-  }
 
   async getPosts() {
-    var data =  await API.graphql(graphqlOperation(getHackerNewsPosts))
-    this.setState({posts:  data.data.getHackerNewsPosts})
-    console.log(this.state);
-    console.log(data);
-    // .then(result => {
-    //   console.log(result.data.getHackerNewsPosts);
-    //   this.setState({posts: ["test", "test"]});
-    // })
-    // .catch(error => {
-    //   console.log("ERROR: " + JSON.stringify(error, null, 4));
-    // });
+    const data = await API.graphql(graphqlOperation(getHackerNewsPosts));
+    this.posts = data;
   };
 
   render() {
     return (
       <div>
         <h1>HACKER NEWS</h1>
-        {this.state.posts.map(post => {
+        {this.posts.map(post => {
           const { title, url } = post;
           return (
             <div key={title}>
