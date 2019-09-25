@@ -37,12 +37,10 @@ class HackerNews extends React.Component {
       posts: [],
       testState: null
     }
-    this.getPosts = this.getPosts.bind(this)
   }
 
   componentDidMount() {
     this.getPosts();
-    console.log(this.state);
   }
   
   changeState() {
@@ -50,30 +48,32 @@ class HackerNews extends React.Component {
   }
 
   async getPosts() {
-    console.log('get posts');
-    API.graphql(graphqlOperation(getHackerNewsPosts))
-    .then(result => {
-      console.log(result.data.getHackerNewsPosts);
-      this.setState({posts: ["test", "test"]});
-    })
-    .catch(error => {
-      console.log("ERROR: " + JSON.stringify(error, null, 4));
-    });
+    var data =  await API.graphql(graphqlOperation(getHackerNewsPosts))
+    this.setState({posts:  data.data.getHackerNewsPosts})
+    console.log(this.state);
+    console.log(data);
+    // .then(result => {
+    //   console.log(result.data.getHackerNewsPosts);
+    //   this.setState({posts: ["test", "test"]});
+    // })
+    // .catch(error => {
+    //   console.log("ERROR: " + JSON.stringify(error, null, 4));
+    // });
   };
 
   render() {
     return (
       <div>
         <h1>HACKER NEWS</h1>
-        {/* {this.posts.map(post => {
-        const { title, url } = post;
-        return (
-          <div key={title}>
-            <h2>{title}</h2>
-            <a href={url}>view live</a>
-          </div> */}
-        {/* ) */}
-      })}
+        {this.state.posts.map(post => {
+          const { title, url } = post;
+          return (
+            <div key={title}>
+              <h2>{title}</h2>
+              <a href={url}>view live</a>
+            </div>
+          )
+        })}
       </div>
     )
   }
