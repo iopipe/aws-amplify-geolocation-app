@@ -30,39 +30,66 @@ const reducer = (state, action) =>{
   }
 }
 
-function HackerNews({ match }) {
-  var [posts, updatePosts] = useState([]);
-  console.log("Trying to get HN posts")
-
-  function handlePosts(data) {
-    updatePosts(data);
+class HackerNews extends React.Component {
+  constructor(props)   {
+    super(props);
+    this.state = {
+      posts: []
+    }
   }
-
-  API.graphql(graphqlOperation(getHackerNewsPosts))
+  function getPosts() {
+    API.graphql(graphqlOperation(getHackerNewsPosts))
     .then(result => {
-      console.log("Results Below")
-      console.log(result.data.getHackerNewsPosts);
-      // handlePosts(result.data.getHackerNewsPosts);
-      updatePosts(result.data.getHackerNewsPosts);
+      console.log(result);
+      
     })
     .catch(error => {
       console.log("ERROR: " + JSON.stringify(error, null, 4));
-    })
-  return (
-    <div>
-      <h1>HACKER NEWS</h1>
-      {posts.map(post => {
-        const { title, url } = post;
-        return (
-          <div key={title}>
-            <h2>{title}</h2>
-            <a href={url}>view live</a>
-          </div>
-        )
-      })}
-    </div>
-  );
+    });
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>HACKER NEWS</h1>
+      </div>
+    )
+  }
 }
+
+// function HackerNews({ match }) {
+//   var [posts, updatePosts] = useState([]);
+//   console.log("Trying to get HN posts")
+
+//   function handlePosts(data) {
+//     updatePosts(data);
+//   }
+
+//   API.graphql(graphqlOperation(getHackerNewsPosts))
+//     .then(result => {
+//       console.log("Results Below")
+//       console.log(result.data.getHackerNewsPosts);
+//       // handlePosts(result.data.getHackerNewsPosts);
+//       updatePosts(result.data.getHackerNewsPosts);
+//     })
+//     .catch(error => {
+//       console.log("ERROR: " + JSON.stringify(error, null, 4));
+//     })
+//   return (
+//     <div>
+//       <h1>HACKER NEWS</h1>
+//       {posts.map(post => {
+//         const { title, url } = post;
+//         return (
+//           <div key={title}>
+//             <h2>{title}</h2>
+//             <a href={url}>view live</a>
+//           </div>
+//         )
+//       })}
+//     </div>
+//   );
+// }
 
 function GithubRepos({ match }) {
   console.log("Trying to get github repos")
