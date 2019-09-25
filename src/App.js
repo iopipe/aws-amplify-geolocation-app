@@ -37,6 +37,7 @@ class HackerNews extends React.Component {
       posts: [],
       testState: null
     }
+    this.getPosts = this.getPosts.bind(this)
   }
 
   componentDidMount() {
