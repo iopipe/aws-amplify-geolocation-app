@@ -34,6 +34,9 @@ class HackerNews extends React.Component {
   constructor(props) {
     super(props);
     this.posts = [];
+    this.state = {
+      loading: true
+    }
   }
 
   componentDidMount() {
@@ -41,11 +44,24 @@ class HackerNews extends React.Component {
   }
 
   async getPosts() {
-    const data = await API.graphql(graphqlOperation(getHackerNewsPosts));
-    this.posts = data;
+    const data = await API.graphql(graphqlOperation(getHackerNewsPosts))
+    /*const data = await fetch('https://api.graphql.jobs/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ query: '{ jobs { id } }' }),
+    })*/
+    .then(res => res.json())
+    //.then(res => console.log(res.data))
+    .then(res => {
+      this.posts = res.data;
+      this.setState({ loading: true });
+    });
   };
 
   render() {
+    console.log(this.posts);
     return (
       <div>
         <h1>HACKER NEWS</h1>
