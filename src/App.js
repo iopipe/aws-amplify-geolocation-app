@@ -44,24 +44,14 @@ class HackerNews extends React.Component {
   }
 
   async getPosts() {
-    const data = await API.graphql(graphqlOperation(getHackerNewsPosts))
-    /*const data = await fetch('https://api.graphql.jobs/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ query: '{ jobs { id } }' }),
-    })*/
-    .then(res => res.json())
-    //.then(res => console.log(res.data))
+    await API.graphql(graphqlOperation(getHackerNewsPosts))
     .then(res => {
-      this.posts = res.data;
+      this.posts = res.data.getHackerNewsPosts;
       this.setState({ loading: true });
     });
   };
 
   render() {
-    console.log(this.posts);
     return (
       <div>
         <h1>HACKER NEWS</h1>
@@ -79,62 +69,41 @@ class HackerNews extends React.Component {
   }
 }
 
-// function HackerNews({ match }) {
-//   var [posts, updatePosts] = useState([]);
-//   console.log("Trying to get HN posts")
-
-//   function handlePosts(data) {
-//     updatePosts(data);
-//   }
-
-//   API.graphql(graphqlOperation(getHackerNewsPosts))
-//     .then(result => {
-//       console.log("Results Below")
-//       console.log(result.data.getHackerNewsPosts);
-//       // handlePosts(result.data.getHackerNewsPosts);
-//       updatePosts(result.data.getHackerNewsPosts);
-//     })
-//     .catch(error => {
-//       console.log("ERROR: " + JSON.stringify(error, null, 4));
-//     })
-//   return (
-//     <div>
-//       <h1>HACKER NEWS</h1>
-//       {posts.map(post => {
-//         const { title, url } = post;
-//         return (
-//           <div key={title}>
-//             <h2>{title}</h2>
-//             <a href={url}>view live</a>
-//           </div>
-//         )
-//       })}
-//     </div>
-//   );
-// }
-
-function GithubRepos({ match }) {
-  console.log("Trying to get github repos")
-  const repos = function getRepos() {
-    API.graphql(graphqlOperation(getTrendingGithubRepos))
-      .then(result => {
-        console.log("Results Below")
-        console.log(result);
-        return result
-
-      })
-      .catch(error => {
-        console.log("ERROR: " + JSON.stringify(error, null, 4));
-      })
+class GithubRepos extends React.Component {
+  constructor(props) {
+    super(props)
+    this.repos = []
+    this.state = {
+      loading: true
+    }
   }
-  return (
-    <div>
-      <h1>Trending GitHub Repos</h1>
-      <p>My content: {repos() ? repos() : "Nothing yet"}</p>
-      <h3>{match.params.topicId}</h3>
 
-    </div>
-  );
+  componentDidMount() {
+    this.getRepos()
+  }
+
+  async getRepos() {
+    await API.graphql(graphqlOperation(getTrendingGithubRepos))
+    .then(res => {
+      this.repos = res.data.getTrendingGithubRepos;
+      this.setState({ loading: true });
+    })  
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Trending GitHub Repos</h1>
+        {this.repos.map(repo => {
+          return(
+            <div key={repo.name}>
+                <a href={repo.url}>{repo.author}/{repo.name}</a>
+            </div>
+          )
+        })}
+      </div>
+    );
+  }
 }
 
 function MyTodoList({ match }) {
@@ -225,8 +194,6 @@ function App() {
         </Router>
       </header>
       <div id="content">
-        <h4>This is some content: </h4>
-
       </div>
     </div>
   );

@@ -7,15 +7,17 @@ The front end react app is stored in an S3 bucket. There are two endpoints on AW
 There is also the `/todos` page which will show a form to submit a new todo item to be stored in DynamoDB.
 
 ## Getting Setup
-1) Install Amplify: `npm install -g @aws-amplify/cli`
+1) Install and configure the AWS CLI: [https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 
-2) Download the repo
+2) Install Amplify: `npm install -g @aws-amplify/cli`
 
-3) Change into the new directory
+3) Download this repo
 
-4) `npm install` or `yarn`
+4) Change into the new directory
 
-5) Create new amplify environment
+5) `npm install` or `yarn`
+
+6) Create new amplify environment
 
    `git checkout -b mysandbox`
    
@@ -33,7 +35,7 @@ There is also the `/todos` page which will show a form to submit a new todo item
    Do you want to generate GraphQL statements (queries, mutations and subscription) based on your schema types? This will overwrite your current graphql queries, mutations and subscriptions Yes
    ```
    
-6) Increase the memory size of the Lambda functions in your aws console to at least 512MB. You could also update this in the cloudformation template for each respective function `amplify/functions/hackerNews/hackerNews-cloudformation-template.json`
+7) Increase the memory size of the Lambda functions in your aws console to at least 512MB. You could also update this in the cloudformation template for each respective function `amplify/functions/hackerNews/hackerNews-cloudformation-template.json`
 
 
 
